@@ -32,7 +32,11 @@
                             <td>{{ booking.booking_status }}</td>
                             <td>
                                 {% if booking.organizer %}
-                                    {{ booking.organizer.name|default:booking.organizer.username }}
+                                    {% if booking.organizer.name %}
+                                        {{ booking.organizer.name }}
+                                    {% else %}
+                                        {{ booking.organizer.username }}
+                                    {% endif %}
                                 {% else %}
                                     Not assigned
                                 {% endif %}
