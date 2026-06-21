@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Booking{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title mb-4">Manage Booking</h3>
+                <p><strong>Event:</strong> {{ booking.event.title }}</p>
+                <p><strong>Client:</strong> {{ booking.client.username }}</p>
+                <p><strong>Date:</strong> {{ booking.event_date }}</p>
+                <p><strong>Time:</strong> {{ booking.event_time|default:'—' }}</p>
+                <p><strong>Current Status:</strong> {{ booking.booking_status }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Booking Status</label>
+                        {{ form.booking_status }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Assign Organizer</label>
+                        {{ form.organizer }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Rejection Reason</label>
+                        {{ form.rejection_reason }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

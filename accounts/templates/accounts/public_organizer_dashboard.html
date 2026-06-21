@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Organizer Bookings{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">Approved Bookings</h2>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Client Name</th>
+                        <th>Event Name</th>
+                        <th>Date</th>
+                        <th>Location</th>
+                        <th>Payment Status</th>
+                        <th>Booking Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                        <tr>
+                            <td>{{ booking.client.name|default:booking.client.username }}</td>
+                            <td>{{ booking.event.title }}</td>
+                            <td>{{ booking.event_date }}</td>
+                            <td>{{ booking.location }}</td>
+                            <td><span class="badge bg-info">{{ booking.payment_status }}</span></td>
+                            <td><span class="badge bg-success">{{ booking.booking_status }}</span></td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#detailModal{{ booking.id }}">View Details</a>
+                                <form method="post" action="{% url 'complete_booking' booking.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-success">Mark Completed</button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        <!-- Detail Modal -->
+                        <div class="modal fade" id="detailModal{{ booking.id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Booking Details</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>Client:</strong> {{ booking.client.name|default:booking.client.username }}</p>
+                                        <p><strong>Event:</strong> {{ booking.event.title }}</p>
+                                        <p><strong>Date:</strong> {{ booking.event_date }}</p>
+                                        <p><strong>Time:</strong> {{ booking.event_time|default:'Not specified' }}</p>
+                                        <p><strong>Location:</strong> {{ booking.location }}</p>
+                                        <p><strong>Requirements:</strong> {{ booking.requirements|default:'None' }}</p>
+                                        <p><strong>Payment Status:</strong> {{ booking.payment_status }}</p>
+                                        <p><strong>Booking Status:</strong> {{ booking.booking_status }}</p>
+                                        <p><strong>Amount:</strong> ${{ booking.event.price }}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <tr><td colspan="7" class="text-center">No approved bookings yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

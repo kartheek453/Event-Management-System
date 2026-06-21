@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12 d-flex justify-content-between align-items-center">
+        <h2>My Bookings</h2>
+        <a href="{% url 'event_list' %}" class="btn btn-primary">Explore Events</a>
+    </div>
+</div>
+{% for booking in bookings %}
+    {% if booking.booking_status == 'REJECTED' %}
+        <div class="alert alert-danger">Booking Rejected. Reason: {{ booking.rejection_reason }}</div>
+    {% endif %}
+{% endfor %}
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Location</th>
+                <th>Payment Status</th>
+                <th>Booking Status</th>
+                <th>Assigned Organizer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+                <tr>
+                    <td>{{ booking.event.title }}</td>
+                    <td>{{ booking.event_date }}</td>
+                    <td>{{ booking.event_time|default:'—' }}</td>
+                    <td>{{ booking.location }}</td>
+                    <td>{{ booking.payment_status }}</td>
+                    <td>{{ booking.booking_status }}</td>
+                    <td>
+                        {% if booking.organizer %}
+                            {{ booking.organizer.name|default:booking.organizer.username }}
+                        {% else %}
+                            Not assigned
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="7" class="text-center">You have not scheduled any bookings yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

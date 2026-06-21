@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="row gy-4">
+    <div class="col-lg-6">
+        <div class="card shadow-sm">
+            {% if event.image %}
+                {% if event.image|slice:":4" == "http" %}
+                    <img src="{{ event.image }}" class="card-img-top" alt="{{ event.title }}">
+                {% else %}
+                    <img src="{% static event.image %}" class="card-img-top" alt="{{ event.title }}">
+                {% endif %}
+            {% else %}
+                <img src="https://static.vecteezy.com/system/resources/thumbnails/043/918/662/small/wedding-stage-decoration-background-inside-the-building-with-elegant-and-beautiful-flower-decorations-free-photo.jpeg" class="card-img-top" alt="{{ event.title }}">
+            {% endif %}
+            <div class="card-body">
+                <h3 class="card-title">{{ event.title }}</h3>
+                <p class="card-text">{{ event.description }}</p>
+                <p><strong>Estimated Cost:</strong> ${{ event.price }}</p>
+                <h5>Services Included</h5>
+                <ul>
+                    {% for service in services %}
+                        <li>{{ service }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4>Schedule Event</h4>
+                <p>Review event details and confirm your booking schedule.</p>
+                <a href="{% url 'schedule_event' event.id %}" class="btn btn-primary">Schedule Event</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

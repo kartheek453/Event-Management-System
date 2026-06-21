@@ -1,0 +1,43 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-12 col-md-4">
+        <div class="card shadow-lg h-100">
+            <img src="{% static 'images/events/wedding.svg' %}" class="card-img-top" alt="Client">
+            <div class="card-body text-center py-4">
+                <h2 class="card-title">Client</h2>
+                <div class="d-grid gap-2 mt-4">
+                    <a class="btn btn-primary" href="{% url 'client_login' %}">Login</a>
+                    <a class="btn btn-outline-primary" href="{% url 'signup' %}">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="card shadow-lg h-100">
+            <img src="{% static 'images/events/birthday.svg' %}" class="card-img-top" alt="Organizer">
+            <div class="card-body text-center py-4">
+                <h2 class="card-title">Organizer</h2>
+                <div class="d-grid gap-2 mt-4">
+                    <a class="btn btn-success" href="{% url 'public_organizer_dashboard' %}">View Bookings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="card shadow-lg h-100">
+            <img src="{% static 'images/events/corporate_event.svg' %}" class="card-img-top" alt="Manager">
+            <div class="card-body text-center py-4">
+                <h2 class="card-title">Manager</h2>
+                <div class="d-grid gap-2 mt-4">
+                    <a class="btn btn-warning text-white" href="{% url 'manager_login' %}">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

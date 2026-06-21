@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Event Categories{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Event Categories</h2>
+    </div>
+</div>
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+    {% for event in events %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                {% if event.image %}
+                    {% if event.image|slice:":4" == "http" %}
+                        <img src="{{ event.image }}" class="card-img-top" alt="{{ event.title }}">
+                    {% else %}
+                        <img src="{% static event.image %}" class="card-img-top" alt="{{ event.title }}">
+                    {% endif %}
+                {% else %}
+                    <img src="https://static.vecteezy.com/system/resources/thumbnails/043/918/662/small/wedding-stage-decoration-background-inside-the-building-with-elegant-and-beautiful-flower-decorations-free-photo.jpeg" class="card-img-top" alt="{{ event.title }}">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ event.title }}</h5>
+                    <p class="card-text">{{ event.description|truncatechars:120 }}</p>
+                    <div class="mt-auto">
+                        <a href="{% url 'event_detail' event.id %}" class="btn btn-primary w-100">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">No events are available yet.</div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Bookings{% endblock %}
+
+{% block content %}
+<h2>Bookings</h2>
+<ul>
+    {% for booking in bookings %}
+        <li>{{ booking.event.title }} booked by {{ booking.user.username }}</li>
+    {% empty %}
+        <li>No bookings yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

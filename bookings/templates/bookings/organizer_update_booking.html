@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Booking{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title mb-4">Update Booking</h3>
+                <p><strong>Event:</strong> {{ booking.event.title }}</p>
+                <p><strong>Client:</strong> {{ booking.client.username }}</p>
+                <p><strong>Location:</strong> {{ booking.location }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-success">Update Status</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

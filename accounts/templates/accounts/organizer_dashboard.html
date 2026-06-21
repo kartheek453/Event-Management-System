@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Organizer Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">Organizer Dashboard</h2>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Client</th>
+                        <th>Date</th>
+                        <th>Booking Status</th>
+                        <th>Payment Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                        <tr>
+                            <td>{{ booking.event.title }}</td>
+                            <td>{{ booking.client.username }}</td>
+                            <td>{{ booking.event_date }}</td>
+                            <td>{{ booking.booking_status }}</td>
+                            <td>{{ booking.payment_status }}</td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-primary" href="{% url 'organizer_update_booking' booking.id %}">Update</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="6">No assignments yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

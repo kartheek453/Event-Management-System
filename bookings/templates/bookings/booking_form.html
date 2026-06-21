@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Schedule Booking{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title mb-4">Schedule {{ event.title }}</h3>
+                <form method="post" id="booking-form">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Client Name</label>
+                        <input type="text" class="form-control" value="{{ request.user.name|default:request.user.username }}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" value="{{ request.user.phone|default:'Not provided' }}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Event Date</label>
+                        {{ form.event_date }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Event Time</label>
+                        {{ form.event_time }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        {{ form.location }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Additional Requirements</label>
+                        {{ form.requirements }}
+                    </div>
+                    <input type="hidden" name="payment_status" id="id_payment_status" value="PENDING">
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-success" id="pay-now">Pay Now</button>
+                        <button type="submit" class="btn btn-outline-secondary" id="pay-later">Pay Later</button>
+                    </div>
+
+                    <div id="payment-qr-card" class="card mt-4 d-none">
+                        <div class="card-body">
+                            <h5 class="card-title">Scan to Pay</h5>
+                            <p class="card-text">Use your UPI app to scan the QR code below. The payment session expires in <span id="payment-timer">02:00</span>.</p>
+                            <div class="d-flex justify-content-center mb-3">
+                                <img id="payment-qr-image" src="" alt="Payment QR code" class="img-fluid" style="max-width: 260px;" />
+                            </div>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-primary" id="payment-done">Done</button>
+                                <button type="button" class="btn btn-secondary" id="payment-cancel">Cancel</button>
+                            </div>
+                            <div id="payment-expired-message" class="alert alert-warning mt-3 d-none" role="alert">
+                                Payment session expired. Please click Pay Now again to generate a new QR code.
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+const payNowBtn = document.getElementById('pay-now');
+const payLaterBtn = document.getElementById('pay-later');
+const paymentStatusInput = document.getElementById('id_payment_status');
+const paymentQrCard = document.getElementById('payment-qr-card');
+const paymentQrImage = document.getElementById('payment-qr-image');
+const paymentTimer = document.getElementById('payment-timer');
+const paymentDoneBtn = document.getElementById('payment-done');
+const paymentCancelBtn = document.getElementById('payment-cancel');
+const paymentExpiredMessage = document.getElementById('payment-expired-message');
+let countdownInterval;
+let remainingSeconds = 120;
+
+function formatTime(seconds) {
+    const minutes = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+    return `${minutes}:${secs}`;
+}
+
+function startPaymentTimer() {
+    clearInterval(countdownInterval);
+    remainingSeconds = 120;
+    paymentTimer.textContent = formatTime(remainingSeconds);
+    paymentExpiredMessage.classList.add('d-none');
+    paymentDoneBtn.disabled = false;
+
+    countdownInterval = setInterval(() => {
+        remainingSeconds -= 1;
+        paymentTimer.textContent = formatTime(remainingSeconds);
+        if (remainingSeconds <= 0) {
+            clearInterval(countdownInterval);
+            paymentDoneBtn.disabled = true;
+            paymentExpiredMessage.classList.remove('d-none');
+        }
+    }, 1000);
+}
+
+function showPaymentQr() {
+    const upiUrl = `upi://pay?pa=demo@upi&pn=EMS&am=${encodeURIComponent('{{ event.price|default:"0" }}')}`;
+    const qrData = encodeURIComponent(upiUrl);
+    paymentQrImage.src = `https://api.qrserver.com/v1/create-qr-code/?data=${qrData}&size=260x260`;
+    paymentQrCard.classList.remove('d-none');
+    paymentStatusInput.value = 'PENDING';
+    startPaymentTimer();
+}
+
+payNowBtn.addEventListener('click', function() {
+    showPaymentQr();
+});
+
+payLaterBtn.addEventListener('click', function() {
+    paymentStatusInput.value = 'PENDING';
+});
+
+paymentDoneBtn.addEventListener('click', function() {
+    if (remainingSeconds <= 0) {
+        return;
+    }
+    paymentStatusInput.value = 'PAID';
+    document.getElementById('booking-form').submit();
+});
+
+paymentCancelBtn.addEventListener('click', function() {
+    paymentQrCard.classList.add('d-none');
+    clearInterval(countdownInterval);
+    paymentExpiredMessage.classList.add('d-none');
+    paymentTimer.textContent = '02:00';
+});
+</script>
+{% endblock %}

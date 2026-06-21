@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Manager Dashboard{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-4">
+    <div class="col-md-2">
+        <div class="card text-bg-primary shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Total Bookings</h5>
+                <p class="display-6">{{ total_bookings }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-bg-success shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Approved</h5>
+                <p class="display-6">{{ approved_bookings }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-bg-danger shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Rejected</h5>
+                <p class="display-6">{{ rejected_bookings }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-bg-success shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Completed</h5>
+                <p class="display-6">{{ completed_bookings }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-bg-dark shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Paid Amount</h5>
+                <p class="display-6">${{ paid_amount }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-bg-secondary shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Pending Amount</h5>
+                <p class="display-6">${{ pending_amount }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Create Organizer</h5>
+                <a href="{% url 'create_organizer' %}" class="btn btn-primary">Create Organizer</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">All Bookings</h5>
+        <a href="{% url 'manager_bookings' %}" class="btn btn-outline-secondary">View Bookings</a>
+    </div>
+</div>
+{% endblock %}

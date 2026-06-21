@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Client Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Client Dashboard</h2>
+            <a class="btn btn-primary" href="{% url 'event_list' %}">Browse Events</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>Location</th>
+                        <th>Payment Status</th>
+                        <th>Booking Status</th>
+                        <th>Organizer</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                        <tr>
+                            <td>{{ booking.event.title }}</td>
+                            <td>{{ booking.event_date }}</td>
+                            <td>{{ booking.location }}</td>
+                            <td>{{ booking.payment_status }}</td>
+                            <td>{{ booking.booking_status }}</td>
+                            <td>
+                                {% if booking.organizer %}
+                                    {{ booking.organizer.name|default:booking.organizer.username }}
+                                {% else %}
+                                    Not assigned
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if booking.booking_status == 'REJECTED' %}
+                                    {{ booking.rejection_reason|default:'No reason provided' }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="7">No bookings yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
